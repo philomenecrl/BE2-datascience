@@ -151,6 +151,35 @@ def display_metrics(metrics: dict, decimals: int = 3):
     display(df.style.hide(axis="index"))
 
 
+def show_results(results, docs, use_graphs=False):
+    """
+    Affiche le top K des documents avec leurs titres et scores.
+    """
+    print("Score |                      Title                         ")
+    print("-----------------------------------------------------------")
+    for doc_id, score in results.items():
+        title = docs[doc_id].get('title', 'No Title')
+        if use_graphs:
+            print(f"{score*10e5:.2f}10e-5 | {title}")
+        else:
+            print(f"{score*100:.2f}% | {title}")
+    print("-----------------------------------------------------------")
+
+
+def show_citations(citations, queries, docs):
+    """
+    Affiche le top K des documents les plus cités avec leurs titres et le nombre de citations.
+    """
+    all_docs = {**queries, **docs}
+    print("Citations |                  Title                         ")
+    print("-----------------------------------------------------------")
+    for item in citations:
+        doc_id, num_citations = item
+        title = all_docs[doc_id].get('title', 'No Title')
+        print(f"   {num_citations}    | {title}")
+    print("-----------------------------------------------------------")
+
+
 def save_predictions(preds: dict[str, dict[str, int]], test_set: dict[str, dict[str, int]], file_path: str):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write("RowId,query-id,corpus-id,score\n")

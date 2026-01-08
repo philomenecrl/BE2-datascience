@@ -22,9 +22,9 @@ def build_citation_graph(queries, docs):
     return G
 
 
-def get_all_ppr(G, queries, alpha=0.85):
+def get_all_ppr(G, query_ids, alpha=0.85):
     ppr_dict = {}
-    for query_id in tqdm(queries.keys()):
+    for query_id in tqdm(query_ids):
         ppr = nx.pagerank(G, alpha=alpha, personalization={query_id: 1.0})
         ppr_dict[query_id] = ppr
     return ppr_dict

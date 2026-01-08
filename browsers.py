@@ -55,7 +55,6 @@ def dense_browser(
     Combines similarity scores from embeddings with PPR scores if provided.
     """
     
-    query_id = list(query_embedding.keys())[0]
     corpus_ids = list(corpus_embeddings.keys())
     
     query_vector = np.array(list(query_embedding.values())[0])
@@ -75,18 +74,6 @@ def dense_browser(
     top_indices = np.argsort(-final_scores)[:top_k]
     results = {corpus_ids[idx]: final_scores[idx].item() for idx in top_indices}
     return results
-
-
-def get_best_threshold(y_true, y_pred):
-    """
-    Extract the best threshold from ROC curve using Youden's J statistic on logits.
-    """
-    fpr, tpr, thresholds = roc_curve(y_true, y_pred)
-
-    # Youden's J statistic
-    J = tpr - fpr
-    best_idx = np.argmax(J)
-    return thresholds[best_idx]
 
 
 def get_logits(
@@ -121,6 +108,18 @@ def get_logits(
     y_pred = np.array(preds)
     y_true = np.array(targets)
     return y_pred, y_true
+
+
+def get_best_threshold(y_true, y_pred):
+    """
+    Extract the best threshold from ROC curve using Youden's J statistic on logits.
+    """
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred)
+
+    # Youden's J statistic
+    J = tpr - fpr
+    best_idx = np.argmax(J)
+    return thresholds[best_idx]
 
 
 def valid_browser(
